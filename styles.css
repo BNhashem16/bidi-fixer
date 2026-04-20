@@ -1,14 +1,15 @@
 /*
  * Bidi Fixer - Injected Styles
  *
- * Targets only elements the content script has tagged. unicode-bidi: plaintext
- * lets the UA pick a per-paragraph base direction from the first strong
- * character — the right behaviour for mixed Arabic/Latin runs.
+ * The content script sets `unicode-bidi` inline per element:
+ *   - `plaintext` for mixed runs in non-layout-sensitive containers
+ *     (lets the UA pick base direction from the first strong character).
+ *   - `isolate` for list items, table cells, headings, etc. where we must
+ *     preserve the parent's direction so bullet markers, alignment, and
+ *     indentation stay intact while still rendering mixed text correctly.
+ *
+ * Nested <bdi> and explicit ltr children stay isolated from their parent.
  */
-
-[data-bidi-fixer="auto"] {
-  unicode-bidi: plaintext;
-}
 
 [data-bidi-fixer="auto"] bdi,
 [data-bidi-fixer="auto"] [dir="ltr"] {

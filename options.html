@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
     <title>Bidi Fixer — Options</title>
@@ -11,7 +11,7 @@
         <span class="op-logo" aria-hidden="true">ب·B</span>
         <div>
           <h1 data-i18n="options_title">Bidi Fixer — Options</h1>
-          <p class="op-sub">v1.2.0</p>
+          <p class="op-sub" id="op-version">—</p>
         </div>
       </header>
 
@@ -20,8 +20,8 @@
         <label class="op-row">
           <input type="checkbox" id="op-enabled" />
           <div>
-            <strong data-i18n="popup_title">Enabled globally</strong>
-            <small>Alt + Shift + B</small>
+            <strong data-i18n="options_enabled_global">Enabled globally</strong>
+            <small data-i18n="options_shortcut_hint">Alt + Shift + B</small>
           </div>
         </label>
 
@@ -106,9 +106,9 @@
       </section>
 
       <footer class="op-footer">
-        <a href="https://github.com/BNhashem16/bidi-fixer" target="_blank" rel="noopener">GitHub</a>
-        <span>·</span>
-        <span>MIT License</span>
+        <a href="https://github.com/BNhashem16/bidi-fixer" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span aria-hidden="true">·</span>
+        <span data-i18n="options_footer_license">MIT License</span>
       </footer>
     </main>
 

@@ -73,7 +73,6 @@ body {
   flex: 0 0 auto;
 }
 
-.pf-title-text { min-width: 0; }
 .pf-title h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0.2px; }
 .pf-sub {
   margin: 2px 0 0;
@@ -82,8 +81,9 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 180px;
+  min-width: 0;
 }
+.pf-title-text { flex: 1 1 auto; min-width: 0; }
 
 .pf-switch { position: relative; display: inline-block; width: 44px; height: 24px; cursor: pointer; flex: 0 0 auto; }
 .pf-switch input { opacity: 0; width: 0; height: 0; }
@@ -112,6 +112,11 @@ body {
   border-color: transparent;
 }
 .pf-switch input:checked + .pf-slider::before { transform: translateX(20px); background: white; }
+[dir="rtl"] .pf-switch input:checked + .pf-slider::before { transform: translateX(-20px); }
+.pf-switch input:focus-visible + .pf-slider {
+  outline: 2px solid var(--accent-hi);
+  outline-offset: 2px;
+}
 
 .pf-section { margin-bottom: 12px; }
 .pf-label {
@@ -123,8 +128,15 @@ body {
   font-weight: 600;
 }
 
-.pf-modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.pf-mode input { position: absolute; opacity: 0; pointer-events: none; }
+.pf-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.pf-mode { position: relative; }
+.pf-mode input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
 .pf-mode-box {
   display: flex;
   flex-direction: column;
@@ -137,8 +149,8 @@ body {
   cursor: pointer;
   transition: border-color 120ms ease, background 120ms ease, transform 120ms ease, box-shadow 120ms ease;
 }
-.pf-mode-box strong { font-size: 12px; font-weight: 600; }
-.pf-mode-box small { font-size: 10px; color: var(--muted); }
+.pf-mode-box strong { font-size: 12px; font-weight: 600; line-height: 1.2; }
+.pf-mode-box small { font-size: 11px; color: var(--muted); line-height: 1.3; word-break: break-word; }
 .pf-mode:hover .pf-mode-box { border-color: var(--border-hi); }
 .pf-mode input:checked + .pf-mode-box {
   border-color: var(--accent);
@@ -204,6 +216,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   margin-top: 4px;
   padding-top: 10px;
   border-top: 1px solid var(--border);
@@ -239,6 +252,12 @@ body {
 }
 .pf-btn:hover { background: var(--surface-hi); border-color: var(--accent); }
 .pf-btn:active { transform: translateY(1px); }
+.pf-btn:focus-visible { outline: 2px solid var(--accent-hi); outline-offset: 2px; }
+.pf-btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 
 .pf-btn-ghost { background: transparent; color: var(--muted); padding: 4px 10px; font-size: 11px; }
 .pf-btn-ghost:hover { color: var(--text); background: var(--surface); }

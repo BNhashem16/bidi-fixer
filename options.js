@@ -1,6 +1,6 @@
 const DEFAULTS = {
   enabled: true,
-  mode: "auto",
+  mode: "rtl",
   siteOverrides: {},
   scripts: { arabic: true, hebrew: true, persianExtras: true },
   digits: "off",
@@ -29,9 +29,27 @@ const controls = {
 };
 
 // ---------- i18n ----------
+document.documentElement.dir = chrome.i18n.getMessage("@@bidi_dir") || "ltr";
+document.documentElement.lang = chrome.i18n.getMessage("@@ui_locale") || "en";
+
 for (const el of document.querySelectorAll("[data-i18n]")) {
   const msg = chrome.i18n.getMessage(el.dataset.i18n);
   if (msg) el.textContent = msg;
+}
+for (const el of document.querySelectorAll("[data-i18n-title]")) {
+  const msg = chrome.i18n.getMessage(el.dataset.i18nTitle);
+  if (msg) el.title = msg;
+}
+for (const el of document.querySelectorAll("[data-i18n-aria-label]")) {
+  const msg = chrome.i18n.getMessage(el.dataset.i18nAriaLabel);
+  if (msg) el.setAttribute("aria-label", msg);
+}
+
+// Version from manifest (single source of truth)
+const $version = document.getElementById("op-version");
+if ($version) {
+  const manifest = chrome.runtime.getManifest();
+  $version.textContent = `v${manifest.version}`;
 }
 
 function setStatus(key, kind = "idle") {
@@ -93,7 +111,7 @@ function renderSites(overrides) {
     if (rules.enabled === false) {
       const tag = document.createElement("span");
       tag.className = "op-site-tag warn";
-      tag.textContent = "disabled";
+      tag.textContent = chrome.i18n.getMessage("options_site_tag_disabled") || "disabled";
       row.appendChild(tag);
     } else {
       const spacer = document.createElement("span");

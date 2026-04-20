@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
     <title>Bidi Fixer</title>
@@ -14,8 +14,8 @@
           <p class="pf-sub" id="pf-host">—</p>
         </div>
       </div>
-      <label class="pf-switch" title="Alt+Shift+B">
-        <input type="checkbox" id="pf-enabled" />
+      <label class="pf-switch" data-i18n-title="popup_toggle_title" title="Toggle Bidi Fixer (Alt+Shift+B)">
+        <input type="checkbox" id="pf-enabled" data-i18n-aria-label="popup_toggle_title" aria-label="Toggle Bidi Fixer" />
         <span class="pf-slider" aria-hidden="true"></span>
       </label>
     </header>
@@ -57,8 +57,8 @@
 
         <div class="pf-site-mode">
           <span class="pf-mini-label" data-i18n="popup_site_mode_label">Override mode</span>
-          <select id="pf-site-mode">
-            <option value="">—</option>
+          <select id="pf-site-mode" data-i18n-aria-label="popup_site_mode_label" aria-label="Override mode">
+            <option value="" data-i18n="popup_site_mode_none">No override</option>
             <option value="auto" data-i18n="popup_mode_auto">Auto</option>
             <option value="rtl" data-i18n="popup_mode_rtl">Force RTL</option>
             <option value="ltr" data-i18n="popup_mode_ltr">Force LTR</option>

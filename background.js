@@ -11,7 +11,7 @@
 
 const DEFAULTS = {
   enabled: true,
-  mode: "auto",
+  mode: "rtl",
   siteOverrides: {}, // { "example.com": { enabled?: false, mode?: "rtl" } }
   scripts: { arabic: true, hebrew: true, persianExtras: true },
   digits: "off",           // "off" | "toWestern" | "toEastern"
@@ -34,7 +34,7 @@ function effective(cfg, host) {
   const override = (cfg.siteOverrides && host && cfg.siteOverrides[host]) || {};
   return {
     enabled: override.enabled ?? cfg.enabled ?? true,
-    mode: override.mode || cfg.mode || "auto",
+    mode: override.mode || cfg.mode || "rtl",
     scripts: cfg.scripts || DEFAULTS.scripts,
     digits: cfg.digits || "off",
     normalizeTatweel: !!cfg.normalizeTatweel,

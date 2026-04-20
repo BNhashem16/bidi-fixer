@@ -1,11 +1,14 @@
 # Chrome Web Store clipboard helper.
 #
-# Pick the field you are filling in, and this script copies the exact text
-# to your clipboard. Run with:
+# Usage:
+#   powershell -File clipboard-helper.ps1           # interactive picker
+#   powershell -File clipboard-helper.ps1 5         # copy block #5 directly
+#   powershell -File clipboard-helper.ps1 perm-activeTab   # copy by name
+#   powershell -File clipboard-helper.ps1 list      # list all keys
 #
-#   powershell -File clipboard-helper.ps1
-#
-# Then paste into the Chrome Web Store form with Ctrl+V.
+# Paste into the Chrome Web Store form with Ctrl+V.
+
+param([string]$Pick = "")
 
 $blocks = [ordered]@{
     "title" = "Bidi Fixer - Arabic/English Text"
@@ -72,27 +75,68 @@ WHO IS IT FOR?
     "homepage-url" = "https://github.com/BNhashem16/bidi-fixer"
 }
 
-Write-Host ""
-Write-Host "  Chrome Web Store - clipboard helper" -ForegroundColor Cyan
-Write-Host "  =====================================" -ForegroundColor Cyan
-Write-Host ""
+$keys = @($blocks.Keys)
 
-$i = 1
-foreach ($key in $blocks.Keys) {
-    Write-Host ("  {0,2}. {1}" -f $i, $key) -ForegroundColor Yellow
-    $i++
+function Show-Menu {
+    Write-Host ""
+    Write-Host "  Chrome Web Store - clipboard helper" -ForegroundColor Cyan
+    Write-Host "  =====================================" -ForegroundColor Cyan
+    Write-Host ""
+    $i = 1
+    foreach ($key in $keys) {
+        Write-Host ("  {0,2}. {1}" -f $i, $key) -ForegroundColor Yellow
+        $i++
+    }
+    Write-Host ""
 }
 
-Write-Host ""
-$choice = Read-Host "  Pick a number (or q to quit)"
+function Copy-Block($key) {
+    if (-not $blocks.Contains($key)) {
+        Write-Host ""
+        Write-Host "  Unknown key: $key" -ForegroundColor Red
+        exit 1
+    }
+    Set-Clipboard -Value $blocks[$key]
+    $preview = $blocks[$key]
+    if ($preview.Length -gt 80) { $preview = $preview.Substring(0, 80) + "..." }
+    Write-Host ""
+    Write-Host "  Copied '$key' to clipboard. Paste with Ctrl+V." -ForegroundColor Green
+    Write-Host "  Preview: $preview" -ForegroundColor DarkGray
+    Write-Host ""
+}
 
+if ($Pick -eq "list") {
+    Show-Menu
+    exit
+}
+
+if ($Pick -ne "") {
+    if ($Pick -match '^\d+$') {
+        $idx = [int]$Pick - 1
+        if ($idx -lt 0 -or $idx -ge $keys.Count) {
+            Write-Host ""
+            Write-Host "  Number out of range (1 to $($keys.Count))" -ForegroundColor Red
+            exit 1
+        }
+        Copy-Block $keys[$idx]
+    } else {
+        Copy-Block $Pick
+    }
+    exit
+}
+
+# Interactive mode
+Show-Menu
+$choice = Read-Host "  Pick a number (or q to quit)"
 if ($choice -eq "q") { exit }
 
-$idx = [int]$choice - 1
-$key = @($blocks.Keys)[$idx]
-$text = $blocks[$key]
-
-Set-Clipboard -Value $text
-Write-Host ""
-Write-Host "  Copied '$key' to clipboard. Paste with Ctrl+V." -ForegroundColor Green
-Write-Host ""
+if ($choice -match '^\d+$') {
+    $idx = [int]$choice - 1
+    if ($idx -lt 0 -or $idx -ge $keys.Count) {
+        Write-Host "  Number out of range" -ForegroundColor Red
+        exit 1
+    }
+    Copy-Block $keys[$idx]
+} else {
+    Copy-Block $choice
+}

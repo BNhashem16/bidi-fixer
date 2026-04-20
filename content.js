@@ -35,6 +35,7 @@
   const PERSIAN_EXTRAS_RE = /[\u06A9\u06AF\u067E\u0686\u0698\u06CC\u06F0-\u06F9]/;
 
   const LATIN_DIGIT_RE = /[A-Za-z0-9]/;
+  const LATIN_LETTER_RE = /[A-Za-z\u00C0-\u024F]/;
   const TATWEEL_RE = /\u0640+/g;
   const ALEF_VARIANTS_RE = /[\u0622\u0623\u0625]/g;
   const EASTERN_DIGITS_RE = /[\u0660-\u0669]/g;
@@ -46,9 +47,16 @@
     "INPUT", "TEXTAREA", "SELECT", "OPTION", "BUTTON"
   ]);
 
+  // Elements where flipping base direction visibly damages layout
+  // (bullet markers, table cell alignment, heading alignment).
+  const LAYOUT_BLOCK_TAGS = new Set([
+    "LI", "TH", "TD", "DT", "DD", "CAPTION", "FIGCAPTION",
+    "H1", "H2", "H3", "H4", "H5", "H6", "P", "BLOCKQUOTE", "SUMMARY"
+  ]);
+
   const state = {
     enabled: true,
-    mode: "auto",
+    mode: "rtl",
     scripts: { arabic: true, hebrew: true, persianExtras: true },
     digits: "off",
     normalizeTatweel: false,
@@ -79,6 +87,26 @@
 
   function isMixed(text) {
     return hasRTL(text) && LATIN_DIGIT_RE.test(text);
+  }
+
+  function firstStrongDir(text) {
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (state._detectRe && state._detectRe.test(ch)) return "rtl";
+      if (LATIN_LETTER_RE.test(ch)) return "ltr";
+    }
+    return null;
+  }
+
+  function getAmbientDir(el) {
+    let cur = el.parentElement;
+    while (cur) {
+      const d = cur.getAttribute && cur.getAttribute("dir");
+      if (d === "ltr" || d === "rtl") return d;
+      cur = cur.parentElement;
+    }
+    const htmlDir = document.documentElement.getAttribute("dir");
+    return htmlDir === "rtl" ? "rtl" : "ltr";
   }
 
   function shouldSkip(el) {
@@ -133,7 +161,30 @@
     applyTextTransforms(el);
 
     const mode = state.mode;
-    const dir = mode === "rtl" ? "rtl" : mode === "ltr" ? "ltr" : "auto";
+    let dir;
+    let bidi = null;
+
+    if (mode === "rtl") {
+      dir = "rtl";
+    } else if (mode === "ltr") {
+      dir = "ltr";
+    } else {
+      // Auto: only flip a layout-sensitive block (li, th, td, h1-h6, p, ...)
+      // when its first-strong char direction matches the ambient direction.
+      // Otherwise, keep the ambient direction so bullet markers and alignment
+      // stay consistent, and isolate the mixed text with unicode-bidi: isolate.
+      const ambient = getAmbientDir(el);
+      const first = firstStrongDir(text);
+      const isLayoutBlock = LAYOUT_BLOCK_TAGS.has(el.tagName);
+
+      if (isLayoutBlock && first && first !== ambient) {
+        dir = ambient;
+        bidi = "isolate";
+      } else {
+        dir = "auto";
+        bidi = isMixed(text) ? "plaintext" : null;
+      }
+    }
 
     if (!el.hasAttribute(MARK_ATTR)) {
       const existing = el.getAttribute("dir");
@@ -143,8 +194,8 @@
     if (el.getAttribute("dir") !== dir) el.setAttribute("dir", dir);
     if (el.getAttribute(MARK_ATTR) !== mode) el.setAttribute(MARK_ATTR, mode);
 
-    if (mode === "auto" && isMixed(text)) {
-      el.style.setProperty("unicode-bidi", "plaintext", "important");
+    if (bidi) {
+      el.style.setProperty("unicode-bidi", bidi, "important");
     } else {
       el.style.removeProperty("unicode-bidi");
     }
@@ -317,7 +368,7 @@
 
   function bootstrap() {
     if (!chrome.runtime?.sendMessage) {
-      applyState({ enabled: true, mode: "auto" });
+      applyState({ enabled: true, mode: "rtl" });
       return;
     }
     try {

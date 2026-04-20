@@ -1,6 +1,6 @@
 const DEFAULTS = {
   enabled: true,
-  mode: "auto",
+  mode: "rtl",
   siteOverrides: {}
 };
 
@@ -22,13 +22,21 @@ let currentHost = "";
 let currentTab = null;
 
 // ---------- i18n ----------
+document.documentElement.dir = chrome.i18n.getMessage("@@bidi_dir") || "ltr";
+document.documentElement.lang = chrome.i18n.getMessage("@@ui_locale") || "en";
+
 for (const el of document.querySelectorAll("[data-i18n]")) {
-  const key = el.dataset.i18n;
-  const msg = chrome.i18n.getMessage(key);
+  const msg = chrome.i18n.getMessage(el.dataset.i18n);
   if (msg) el.textContent = msg;
 }
-// Select options (they don't accept data-i18n via textContent loop above
-// because they were already localised — re-apply to be safe).
+for (const el of document.querySelectorAll("[data-i18n-title]")) {
+  const msg = chrome.i18n.getMessage(el.dataset.i18nTitle);
+  if (msg) el.title = msg;
+}
+for (const el of document.querySelectorAll("[data-i18n-aria-label]")) {
+  const msg = chrome.i18n.getMessage(el.dataset.i18nAriaLabel);
+  if (msg) el.setAttribute("aria-label", msg);
+}
 for (const opt of $siteMode.options) {
   const key = opt.dataset.i18n;
   if (key) {
@@ -108,9 +116,8 @@ async function render() {
   $siteMode.value = override?.mode || "";
   const hasOverride = !!override && Object.keys(override).length > 0;
   $siteReset.disabled = !hasOverride;
-  $siteReset.style.opacity = hasOverride ? "1" : "0.5";
 
-  const effectiveMode = override?.mode || cfg.mode || "auto";
+  const effectiveMode = override?.mode || cfg.mode || "rtl";
   $currentMode.textContent = effectiveMode.toUpperCase();
 
   if (siteOff) setStatus("popup_status_off_site", "warn");
@@ -150,7 +157,6 @@ async function commit() {
     setStatus("popup_status_saved", "ok");
     const hasOverride = !!siteOverrides[currentHost];
     $siteReset.disabled = !hasOverride;
-    $siteReset.style.opacity = hasOverride ? "1" : "0.5";
     const effective = siteOverrides[currentHost]?.mode || settings.mode;
     $currentMode.textContent = effective.toUpperCase();
   });

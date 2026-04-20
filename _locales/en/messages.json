@@ -64,6 +64,12 @@
   "options_imported_ok": { "message": "Settings imported." },
   "options_import_error": { "message": "Could not import — invalid JSON." },
   "options_reset_confirm": { "message": "Reset all Bidi Fixer settings?" },
+  "options_enabled_global": { "message": "Enabled globally" },
+  "options_shortcut_hint": { "message": "Alt + Shift + B" },
+  "options_footer_license": { "message": "MIT License" },
+  "options_site_tag_disabled": { "message": "disabled" },
+  "popup_toggle_title": { "message": "Toggle Bidi Fixer (Alt+Shift+B)" },
+  "popup_site_mode_none": { "message": "No override" },
 
   "ctx_fix_selection": { "message": "Bidi Fixer: fix this element" },
   "ctx_ignore_selection": { "message": "Bidi Fixer: ignore this element" },
