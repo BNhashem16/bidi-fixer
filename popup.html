@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bidi Fixer</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="pf-header">
+      <div class="pf-title">
+        <span class="pf-logo" aria-hidden="true">ب·B</span>
+        <div class="pf-title-text">
+          <h1 data-i18n="popup_title">Bidi Fixer</h1>
+          <p class="pf-sub" id="pf-host">—</p>
+        </div>
+      </div>
+      <label class="pf-switch" title="Alt+Shift+B">
+        <input type="checkbox" id="pf-enabled" />
+        <span class="pf-slider" aria-hidden="true"></span>
+      </label>
+    </header>
+
+    <section class="pf-section">
+      <p class="pf-label" data-i18n="popup_mode_label">Direction mode</p>
+      <div class="pf-modes" role="radiogroup">
+        <label class="pf-mode">
+          <input type="radio" name="pf-mode" value="auto" />
+          <span class="pf-mode-box">
+            <strong data-i18n="popup_mode_auto">Auto</strong>
+            <small data-i18n="popup_mode_auto_desc">Detect per element</small>
+          </span>
+        </label>
+        <label class="pf-mode">
+          <input type="radio" name="pf-mode" value="rtl" />
+          <span class="pf-mode-box">
+            <strong data-i18n="popup_mode_rtl">Force RTL</strong>
+            <small data-i18n="popup_mode_rtl_desc">Arabic-first</small>
+          </span>
+        </label>
+        <label class="pf-mode">
+          <input type="radio" name="pf-mode" value="ltr" />
+          <span class="pf-mode-box">
+            <strong data-i18n="popup_mode_ltr">Force LTR</strong>
+            <small data-i18n="popup_mode_ltr_desc">Latin-first</small>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <section class="pf-section">
+      <p class="pf-label" data-i18n="popup_site_label">This site</p>
+      <div class="pf-site">
+        <label class="pf-site-toggle">
+          <input type="checkbox" id="pf-site-disabled" />
+          <span data-i18n="popup_site_disable">Disable on this site</span>
+        </label>
+
+        <div class="pf-site-mode">
+          <span class="pf-mini-label" data-i18n="popup_site_mode_label">Override mode</span>
+          <select id="pf-site-mode">
+            <option value="">—</option>
+            <option value="auto" data-i18n="popup_mode_auto">Auto</option>
+            <option value="rtl" data-i18n="popup_mode_rtl">Force RTL</option>
+            <option value="ltr" data-i18n="popup_mode_ltr">Force LTR</option>
+          </select>
+        </div>
+
+        <button id="pf-site-reset" class="pf-btn pf-btn-ghost" type="button" data-i18n="popup_site_clear">
+          Clear override
+        </button>
+      </div>
+    </section>
+
+    <section class="pf-section pf-stats">
+      <div class="pf-stat">
+        <strong id="pf-fixed-count">0</strong>
+        <small data-i18n="popup_stats_label">Fixed elements</small>
+      </div>
+      <div class="pf-stat pf-stat-mode">
+        <strong id="pf-current-mode">—</strong>
+        <small data-i18n="popup_mode_label">Direction mode</small>
+      </div>
+    </section>
+
+    <footer class="pf-footer">
+      <span id="pf-status" class="pf-status">
+        <span class="pf-dot"></span>
+        <span id="pf-status-text" data-i18n="popup_status_ready">Ready</span>
+      </span>
+      <div class="pf-footer-btns">
+        <button id="pf-options" class="pf-btn pf-btn-ghost" type="button" data-i18n="popup_options">Options</button>
+        <button id="pf-rescan" class="pf-btn" type="button" data-i18n="popup_rescan">Rescan</button>
+      </div>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

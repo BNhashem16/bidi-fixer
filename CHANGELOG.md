@@ -1,0 +1,49 @@
+# Changelog
+
+All notable changes to this project are documented here. This project follows [Semantic Versioning](https://semver.org/).
+
+## [1.2.0] - 2026-04-20
+
+### Added
+- Multi-script detection: Arabic, Hebrew, Persian/Urdu (toggle each in Options).
+- Options page with full settings, import/export as JSON, and reset.
+- Right-click context menu: "Fix this element", "Ignore this element", "Toggle on this site".
+- Per-site **mode** override in addition to per-site enable/disable.
+- Arabic digit conversion (Eastern ↔ Western) as an opt-in transform.
+- Tatweel stripping and Alef unification as opt-in normalisations.
+- Second keyboard shortcut: `Alt + Shift + M` cycles Auto → RTL → LTR.
+- Debug outline mode — highlights every fixed element with a dashed border.
+- Stats counter in popup (fixed element count for current tab).
+- Full i18n: English and Arabic UI (`_locales/en` and `_locales/ar`).
+- Automatic light/dark theme for popup and options page.
+
+### Changed
+- Detection regex expanded to include Arabic Extended-B (`U+0870–U+089F`).
+- Popup layout tightened; current effective mode now shown beside stats.
+- Service worker rewritten to resolve per-site effective state and keep the
+  toolbar badge in sync for every tab.
+
+### Fixed
+- Elements inside nested `contenteditable` regions are no longer touched.
+- Disable flow correctly restores the author's original `dir` attribute.
+
+## [1.1.0] - 2026-04-20
+
+### Added
+- Real PNG icons (16/32/48/128) with regenerator script (`icons/generate.ps1`).
+- Per-site enable/disable override.
+- Toolbar badge showing `off` for inactive tabs.
+- Global `Alt + Shift + B` toggle shortcut.
+- Rescan-current-tab button in popup.
+
+### Fixed
+- Manifest icon load error on fresh installs.
+
+## [1.0.0] - 2026-04-19
+
+### Added
+- Initial release: MV3 extension with Auto / Force RTL / Force LTR modes.
+- Content script with TreeWalker + MutationObserver + `requestIdleCallback` batching.
+- `unicode-bidi: plaintext` strategy for mixed RTL/LTR runs.
+- Popup UI with toggle and mode selector.
+- Service worker for settings persistence and cross-tab broadcasting.

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bidi Fixer — Options</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="op-shell">
+      <header class="op-header">
+        <span class="op-logo" aria-hidden="true">ب·B</span>
+        <div>
+          <h1 data-i18n="options_title">Bidi Fixer — Options</h1>
+          <p class="op-sub">v1.2.0</p>
+        </div>
+      </header>
+
+      <section class="op-card">
+        <h2 data-i18n="options_general">General</h2>
+        <label class="op-row">
+          <input type="checkbox" id="op-enabled" />
+          <div>
+            <strong data-i18n="popup_title">Enabled globally</strong>
+            <small>Alt + Shift + B</small>
+          </div>
+        </label>
+
+        <div class="op-row op-row-col">
+          <strong data-i18n="popup_mode_label">Direction mode</strong>
+          <div class="op-modes" role="radiogroup">
+            <label><input type="radio" name="op-mode" value="auto" /><span data-i18n="popup_mode_auto">Auto</span></label>
+            <label><input type="radio" name="op-mode" value="rtl" /><span data-i18n="popup_mode_rtl">Force RTL</span></label>
+            <label><input type="radio" name="op-mode" value="ltr" /><span data-i18n="popup_mode_ltr">Force LTR</span></label>
+          </div>
+        </div>
+
+        <div class="op-row op-row-col">
+          <strong data-i18n="options_scripts_label">Scripts to fix</strong>
+          <small data-i18n="options_scripts_desc">Select which RTL scripts should trigger a fix.</small>
+          <div class="op-checks">
+            <label><input type="checkbox" id="op-script-arabic" /><span data-i18n="options_script_arabic">Arabic</span></label>
+            <label><input type="checkbox" id="op-script-hebrew" /><span data-i18n="options_script_hebrew">Hebrew</span></label>
+            <label><input type="checkbox" id="op-script-persian" /><span data-i18n="options_script_persian">Persian / Urdu extras</span></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="op-card">
+        <h2 data-i18n="options_text">Text handling</h2>
+
+        <label class="op-row">
+          <input type="checkbox" id="op-tatweel" />
+          <div>
+            <strong data-i18n="options_normalize_tatweel">Remove tatweel (ـ) from Arabic text</strong>
+            <small data-i18n="options_normalize_tatweel_desc">Strips the decorative kashida character that often breaks word boundaries.</small>
+          </div>
+        </label>
+
+        <label class="op-row">
+          <input type="checkbox" id="op-alef" />
+          <div>
+            <strong data-i18n="options_normalize_alef">Normalize Alef variants (إأآ → ا)</strong>
+            <small data-i18n="options_normalize_alef_desc">Helpful for consistent search and copy; off by default to preserve meaning.</small>
+          </div>
+        </label>
+
+        <div class="op-row op-row-col">
+          <strong data-i18n="options_digits_label">Arabic digits</strong>
+          <div class="op-modes" role="radiogroup">
+            <label><input type="radio" name="op-digits" value="off" /><span data-i18n="options_digits_off">Keep as-is</span></label>
+            <label><input type="radio" name="op-digits" value="toWestern" /><span data-i18n="options_digits_to_western">٠١٢٣ → 0123</span></label>
+            <label><input type="radio" name="op-digits" value="toEastern" /><span data-i18n="options_digits_to_eastern">0123 → ٠١٢٣</span></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="op-card">
+        <h2 data-i18n="options_sites">Per-site overrides</h2>
+        <div id="op-sites" class="op-sites">
+          <p class="op-empty" data-i18n="options_no_sites">No per-site overrides yet.</p>
+        </div>
+      </section>
+
+      <section class="op-card">
+        <h2 data-i18n="options_advanced">Advanced</h2>
+        <label class="op-row">
+          <input type="checkbox" id="op-outline" />
+          <div>
+            <strong data-i18n="options_outline">Highlight fixed elements (debug)</strong>
+            <small data-i18n="options_outline_desc">Draws a dashed outline around every element Bidi Fixer has touched.</small>
+          </div>
+        </label>
+      </section>
+
+      <section class="op-card">
+        <h2 data-i18n="options_backup">Backup & restore</h2>
+        <div class="op-actions">
+          <button id="op-export" class="op-btn" type="button" data-i18n="options_export">Export settings</button>
+          <label class="op-btn op-btn-ghost">
+            <span data-i18n="options_import">Import settings</span>
+            <input id="op-import" type="file" accept="application/json" hidden />
+          </label>
+          <button id="op-reset" class="op-btn op-btn-danger" type="button" data-i18n="options_reset">Reset to defaults</button>
+        </div>
+        <p id="op-status" class="op-status"></p>
+      </section>
+
+      <footer class="op-footer">
+        <a href="https://github.com/BNhashem16/bidi-fixer" target="_blank" rel="noopener">GitHub</a>
+        <span>·</span>
+        <span>MIT License</span>
+      </footer>
+    </main>
+
+    <script src="options.js"></script>
+  </body>
+</html>

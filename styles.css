@@ -1,0 +1,23 @@
+/*
+ * Bidi Fixer - Injected Styles
+ *
+ * Targets only elements the content script has tagged. unicode-bidi: plaintext
+ * lets the UA pick a per-paragraph base direction from the first strong
+ * character — the right behaviour for mixed Arabic/Latin runs.
+ */
+
+[data-bidi-fixer="auto"] {
+  unicode-bidi: plaintext;
+}
+
+[data-bidi-fixer="auto"] bdi,
+[data-bidi-fixer="auto"] [dir="ltr"] {
+  unicode-bidi: isolate;
+}
+
+/* Debug mode — outlines every fixed element. Toggled by the content script
+   adding the `bidi-fixer-debug` class on <html>. */
+html.bidi-fixer-debug [data-bidi-fixer] {
+  outline: 1px dashed rgba(124, 108, 255, 0.55) !important;
+  outline-offset: -1px;
+}
