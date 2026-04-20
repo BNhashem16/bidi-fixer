@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here. This project follows [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-04-20
+
+### Added
+- **Firefox support** via `manifest.firefox.json` (MV3, `background.scripts`, `browser_specific_settings.gecko`).
+- **Build scripts** `build.sh` and `build.ps1` — produce `dist/bidi-fixer-chrome-<v>.zip` and `dist/bidi-fixer-firefox-<v>.zip`.
+- **Nine additional locales**: French, Spanish, German, Turkish, Persian, Hebrew, Urdu, Simplified Chinese, Russian. Total 11 bundled UI languages.
+- **Screenshots and promo tiles** under `docs/images/` (popup dark/light, before/after hero, Chrome Web Store small tile + marquee). Regenerator at `docs/generate-screenshots.ps1`.
+- **`PRIVACY.md`** — data-usage policy for store submission.
+- **`docs/STORE_LISTING.md`** — copy-paste-ready Chrome Web Store listing content.
+
+### Changed
+- README now shows screenshots, badges, and both Chrome and Firefox install flows.
+- Manifest version bumped to 1.2.0 for packaged zips (store release).
+
 ## [1.2.0] - 2026-04-20
 
 ### Added
