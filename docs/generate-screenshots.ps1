@@ -105,11 +105,19 @@ function Draw-Popup {
         $accent = [System.Drawing.Color]::FromArgb(106, 91, 255)
     }
 
-    $w = 720; $h = 600
+    # Chrome Web Store requires 1280x800 or 640x400.
+    $w = 1280; $h = 800
     $c = New-Canvas $w $h $bg
     $g = $c.G; $bmp = $c.Bmp
 
-    $px = 60; $py = 40; $pw = 600; $ph = 520
+    # Center the popup frame within the larger canvas.
+    $pw = 600; $ph = 520
+    $px = [int](($w - $pw) / 2)
+    $py = [int](($h - $ph) / 2) - 40
+
+    # Title caption above the popup
+    Draw-Text $g "Bidi Fixer popup" 60 60 28 ([System.Drawing.Color]::FromArgb(238, 241, 255, 220)) "Bold"
+    Draw-Text $g "Toggle, mode, per-site override, and live stats in one place." 60 100 16 ([System.Drawing.Color]::FromArgb(154, 163, 199))
     Draw-Card $g ($px + 6) ($py + 10) $pw $ph 18 ([System.Drawing.Color]::FromArgb(24, 0, 0, 0)) $border
     Draw-Card $g $px $py $pw $ph 18 $surface $border
 
@@ -171,15 +179,15 @@ function Draw-Popup {
 }
 
 function Draw-BeforeAfter {
-    $w = 1400; $h = 600
+    $w = 1280; $h = 800
     $c = New-Canvas $w $h ([System.Drawing.Color]::FromArgb(11, 14, 31))
     $g = $c.G; $bmp = $c.Bmp
 
     Set-GradientBg $g $w $h ([System.Drawing.Color]::FromArgb(17, 21, 44)) ([System.Drawing.Color]::FromArgb(11, 14, 31))
 
-    Draw-Logo $g 80 60 64
-    Draw-Text $g "Bidi Fixer" 160 62 36 ([System.Drawing.Color]::FromArgb(238, 241, 255)) "Bold"
-    Draw-Text $g "Arabic + English text that finally reads right." 160 108 16 ([System.Drawing.Color]::FromArgb(154, 163, 199))
+    Draw-Logo $g 60 60 72
+    Draw-Text $g "Bidi Fixer" 150 64 44 ([System.Drawing.Color]::FromArgb(238, 241, 255)) "Bold"
+    Draw-Text $g "Mixed Arabic + English text that finally reads right." 150 120 20 ([System.Drawing.Color]::FromArgb(154, 163, 199))
 
     $accent = [System.Drawing.Color]::FromArgb(124, 108, 255)
     $text = [System.Drawing.Color]::FromArgb(238, 241, 255)
@@ -191,29 +199,29 @@ function Draw-BeforeAfter {
 
     $arabicSample = ([char]0x0627) + ([char]0x0634) + ([char]0x062A) + ([char]0x0631) + ([char]0x064A) + ([char]0x062A) + " iPhone 15 Pro Max " + ([char]0x0628) + ([char]0x0633) + ([char]0x0639) + ([char]0x0631) + " 4999 " + ([char]0x0631) + ([char]0x064A) + ([char]0x0627) + ([char]0x0644)
 
-    Draw-Card $g 80 200 600 330 18 $surface $border
-    Draw-Pill $g 108 224 90 28 $bad $bad "BEFORE" ([System.Drawing.Color]::White)
-    Draw-Text $g $arabicSample 108 296 22 $text "Bold"
-    Draw-Text $g "numbers and Latin flip inside the RTL run" 108 340 14 $muted
-    Draw-Text $g "- Reversed order" 108 390 15 $bad
-    Draw-Text $g "- Hard to read" 108 420 15 $bad
-    Draw-Text $g "- Breaks search and copy" 108 450 15 $bad
+    Draw-Card $g 60 240 560 400 18 $surface $border
+    Draw-Pill $g 88 262 100 32 $bad $bad "BEFORE" ([System.Drawing.Color]::White)
+    Draw-Text $g $arabicSample 88 352 24 $text "Bold"
+    Draw-Text $g "numbers and Latin flip inside the RTL run" 88 406 16 $muted
+    Draw-Text $g "- Reversed order" 88 470 18 $bad
+    Draw-Text $g "- Hard to read" 88 506 18 $bad
+    Draw-Text $g "- Breaks search and copy" 88 542 18 $bad
 
-    Draw-Card $g 720 200 600 330 18 $surface $border
-    Draw-Pill $g 748 224 80 28 $good $good "AFTER" ([System.Drawing.Color]::White)
-    Draw-Text $g $arabicSample 748 296 22 $text "Bold"
-    Draw-Text $g "dir=auto + unicode-bidi: plaintext" 748 340 14 $muted
-    Draw-Text $g "+ Natural reading order" 748 390 15 $good
-    Draw-Text $g "+ Numbers stay LTR" 748 420 15 $good
-    Draw-Text $g "+ Fully reversible" 748 450 15 $good
+    Draw-Card $g 660 240 560 400 18 $surface $border
+    Draw-Pill $g 688 262 90 32 $good $good "AFTER" ([System.Drawing.Color]::White)
+    Draw-Text $g $arabicSample 688 352 24 $text "Bold"
+    Draw-Text $g "dir=auto + unicode-bidi: plaintext" 688 406 16 $muted
+    Draw-Text $g "+ Natural reading order" 688 470 18 $good
+    Draw-Text $g "+ Numbers stay LTR" 688 506 18 $good
+    Draw-Text $g "+ Fully reversible" 688 542 18 $good
 
-    $pen = New-Object System.Drawing.Pen($accent, 4)
+    $pen = New-Object System.Drawing.Pen($accent, 5)
     $pen.StartCap = [System.Drawing.Drawing2D.LineCap]::Round
     $pen.EndCap = [System.Drawing.Drawing2D.LineCap]::ArrowAnchor
-    $g.DrawLine($pen, 690, 365, 715, 365)
+    $g.DrawLine($pen, 628, 440, 658, 440)
     $pen.Dispose()
 
-    Draw-Text $g "MV3  -  Zero dependencies  -  Zero tracking  -  MIT" 80 560 13 $muted
+    Draw-Text $g "Manifest V3  -  Zero dependencies  -  Zero tracking  -  MIT" 60 720 18 $muted
 
     $out = Join-Path $imgDir "hero.png"
     $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
@@ -242,8 +250,77 @@ function Draw-StorePromo {
     Write-Host "Wrote $out"
 }
 
+function Draw-Options {
+    $w = 1280; $h = 800
+    $c = New-Canvas $w $h ([System.Drawing.Color]::FromArgb(11, 14, 31))
+    $g = $c.G; $bmp = $c.Bmp
+
+    Set-GradientBg $g $w $h ([System.Drawing.Color]::FromArgb(17, 21, 44)) ([System.Drawing.Color]::FromArgb(11, 14, 31))
+
+    $surface = [System.Drawing.Color]::FromArgb(21, 26, 51)
+    $surfaceHi = [System.Drawing.Color]::FromArgb(28, 34, 68)
+    $border = [System.Drawing.Color]::FromArgb(38, 45, 84)
+    $text = [System.Drawing.Color]::FromArgb(238, 241, 255)
+    $muted = [System.Drawing.Color]::FromArgb(154, 163, 199)
+    $accent = [System.Drawing.Color]::FromArgb(124, 108, 255)
+    $ok = [System.Drawing.Color]::FromArgb(74, 222, 128)
+
+    Draw-Logo $g 60 50 56
+    Draw-Text $g "Bidi Fixer" 140 50 32 $text "Bold"
+    Draw-Text $g "Options" 140 92 16 $muted
+    Draw-Text $g "v1.3.0" 60 140 13 $muted
+
+    # Card: General
+    Draw-Card $g 60 180 560 260 14 $surface $border
+    Draw-Text $g "GENERAL" 80 198 12 $muted "Bold"
+    Draw-Text $g "Enabled globally" 80 228 16 $text "Bold"
+    Draw-Text $g "Alt + Shift + B" 80 252 12 $muted
+    Draw-Text $g "Direction mode" 80 292 14 $text "Bold"
+
+    # Mode pills
+    Draw-Pill $g 80 320 100 36 $surfaceHi $accent "Auto" $text
+    Draw-Pill $g 196 320 120 36 $surfaceHi $border "Force RTL" $muted
+    Draw-Pill $g 332 320 120 36 $surfaceHi $border "Force LTR" $muted
+
+    Draw-Text $g "Scripts to fix" 80 376 14 $text "Bold"
+    Draw-Pill $g 80 402 96 32 $surfaceHi $accent "Arabic" $text
+    Draw-Pill $g 192 402 96 32 $surfaceHi $accent "Hebrew" $text
+    Draw-Pill $g 304 402 148 32 $surfaceHi $accent "Persian/Urdu" $text
+
+    # Card: Text handling
+    Draw-Card $g 660 180 560 260 14 $surface $border
+    Draw-Text $g "TEXT HANDLING" 680 198 12 $muted "Bold"
+    Draw-Text $g "Remove tatweel" 680 228 15 $text
+    Draw-Text $g "Normalize Alef variants" 680 258 15 $text
+    Draw-Text $g "Arabic digits" 680 296 14 $text "Bold"
+    Draw-Pill $g 680 322 110 36 $surfaceHi $border "Keep as-is" $muted
+    Draw-Pill $g 806 322 180 36 $surfaceHi $accent "0123 to 0123" $text
+    Draw-Pill $g 1002 322 180 36 $surfaceHi $border "0123 to eastern" $muted
+
+    # Card: Sites
+    Draw-Card $g 60 470 1160 140 14 $surface $border
+    Draw-Text $g "PER-SITE OVERRIDES" 80 488 12 $muted "Bold"
+    Draw-Card $g 80 516 1120 40 10 $surfaceHi $border
+    Draw-Text $g "youtube.com" 100 524 14 $text "Bold"
+    Draw-Pill $g 800 522 70 28 $surface $accent "RTL" $accent
+    Draw-Text $g "Remove" 1130 524 13 $muted
+
+    # Card: Backup
+    Draw-Card $g 60 640 1160 120 14 $surface $border
+    Draw-Text $g "BACKUP" 80 658 12 $muted "Bold"
+    Draw-Pill $g 80 690 170 40 $accent $accent "Export settings" ([System.Drawing.Color]::White)
+    Draw-Pill $g 268 690 180 40 $surface $border "Import settings" $muted
+    Draw-Pill $g 464 690 170 40 $surface ([System.Drawing.Color]::FromArgb(239, 68, 68)) "Reset to defaults" ([System.Drawing.Color]::FromArgb(239, 68, 68))
+
+    $out = Join-Path $imgDir "options.png"
+    $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Png)
+    $g.Dispose(); $bmp.Dispose()
+    Write-Host "Wrote $out"
+}
+
 Draw-Popup "dark"
 Draw-Popup "light"
 Draw-BeforeAfter
+Draw-Options
 Draw-StorePromo 440 280 "store-small-tile.png"
 Draw-StorePromo 1400 560 "store-marquee.png"
