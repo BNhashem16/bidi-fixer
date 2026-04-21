@@ -44,7 +44,13 @@
   const SKIP_TAGS = new Set([
     "SCRIPT", "STYLE", "NOSCRIPT", "TEMPLATE", "IFRAME", "OBJECT", "EMBED",
     "CANVAS", "SVG", "MATH", "CODE", "PRE", "KBD", "SAMP", "VAR",
-    "INPUT", "TEXTAREA", "SELECT", "OPTION", "BUTTON"
+    "SELECT", "OPTION", "BUTTON"
+  ]);
+
+  // Textual form fields that carry user-typed content. In forced modes we
+  // set `dir` on them directly so what the user types flows RTL/LTR.
+  const TEXTUAL_INPUT_TYPES = new Set([
+    "text", "search", "email", "url", "tel", "password", "number", ""
   ]);
 
   // Elements where flipping base direction visibly damages layout
@@ -112,11 +118,46 @@
   function shouldSkip(el) {
     if (!el || el.nodeType !== Node.ELEMENT_NODE) return true;
     if (SKIP_TAGS.has(el.tagName)) return true;
+    if (isTextualField(el)) return true;
     if (el.isContentEditable) return true;
     if (el.closest && el.closest('[contenteditable="true"]')) return true;
     if (el.hasAttribute(IGNORE_ATTR)) return true;
     if (el.hasAttribute("dir") && !el.hasAttribute(MARK_ATTR)) return true;
     return false;
+  }
+
+  function isTextualField(el) {
+    if (!el || el.nodeType !== Node.ELEMENT_NODE) return false;
+    if (el.tagName === "TEXTAREA") return true;
+    if (el.tagName === "INPUT") {
+      const t = (el.getAttribute("type") || "text").toLowerCase();
+      return TEXTUAL_INPUT_TYPES.has(t);
+    }
+    return false;
+  }
+
+  function isEditableHost(el) {
+    if (!el || !el.getAttribute) return false;
+    const v = el.getAttribute("contenteditable");
+    return v === "" || v === "true" || v === "plaintext-only";
+  }
+
+  function applyFieldFix(el) {
+    if (!el || el.nodeType !== Node.ELEMENT_NODE) return;
+    if (el.hasAttribute(IGNORE_ATTR)) return;
+
+    const mode = state.mode;
+    if (mode !== "rtl" && mode !== "ltr") return;
+
+    if (!el.hasAttribute(MARK_ATTR)) {
+      const existing = el.getAttribute("dir");
+      if (existing !== null) el.setAttribute(ORIG_DIR_ATTR, existing);
+    }
+
+    if (el.getAttribute("dir") !== mode) el.setAttribute("dir", mode);
+    if (el.getAttribute(MARK_ATTR) !== mode) el.setAttribute(MARK_ATTR, mode);
+
+    state.fixedCount++;
   }
 
   function getDirectText(el) {
@@ -152,6 +193,16 @@
   }
 
   function applyFix(el) {
+    if (!el || el.nodeType !== Node.ELEMENT_NODE) return;
+    if (el.hasAttribute(IGNORE_ATTR)) return;
+
+    // Force RTL / LTR reaches into textual inputs, textareas, and
+    // contenteditable hosts so user-typed text flows in the chosen direction.
+    if (isTextualField(el) || isEditableHost(el)) {
+      if (state.mode === "rtl" || state.mode === "ltr") applyFieldFix(el);
+      return;
+    }
+
     if (shouldSkip(el)) return;
 
     const text = getDirectText(el);
