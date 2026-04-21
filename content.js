@@ -149,6 +149,9 @@
     const mode = state.mode;
     if (mode !== "rtl" && mode !== "ltr") return;
 
+    // Already fixed for current mode — skip to keep streaming/typing fast.
+    if (el.getAttribute(MARK_ATTR) === mode && el.getAttribute("dir") === mode) return;
+
     if (!el.hasAttribute(MARK_ATTR)) {
       const existing = el.getAttribute("dir");
       if (existing !== null) el.setAttribute(ORIG_DIR_ATTR, existing);
@@ -158,6 +161,10 @@
     if (el.getAttribute(MARK_ATTR) !== mode) el.setAttribute(MARK_ATTR, mode);
 
     state.fixedCount++;
+  }
+
+  function hasTextTransforms() {
+    return state.digits !== "off" || state.normalizeTatweel || state.normalizeAlef;
   }
 
   function getDirectText(el) {
@@ -204,6 +211,18 @@
     }
 
     if (shouldSkip(el)) return;
+
+    // Forced modes: once we've tagged this element for the current mode,
+    // text churn (e.g. streaming LLM output) won't change the outcome, so
+    // skip re-evaluating it unless text-transforms are enabled.
+    if (
+      (state.mode === "rtl" || state.mode === "ltr") &&
+      el.getAttribute(MARK_ATTR) === state.mode &&
+      el.getAttribute("dir") === state.mode &&
+      !hasTextTransforms()
+    ) {
+      return;
+    }
 
     const text = getDirectText(el);
     if (!text || !text.trim()) return;
@@ -340,11 +359,41 @@
     state.observer = new MutationObserver((mutations) => {
       if (!state.enabled) return;
       const candidates = new Set();
+      const forced = state.mode === "rtl" || state.mode === "ltr";
+      const noTransforms = !hasTextTransforms();
+
       for (const m of mutations) {
         if (m.type === "childList") {
-          for (const added of m.addedNodes) collectCandidates(added, candidates);
-        } else if (m.type === "characterData" && m.target.parentElement) {
-          candidates.add(m.target.parentElement);
+          for (const added of m.addedNodes) {
+            // Nodes inserted inside a contenteditable host (LLM streaming,
+            // rich-text composer) don't need per-element scanning — the host
+            // already carries the right `dir`.
+            if (
+              added.nodeType === Node.ELEMENT_NODE &&
+              added.parentElement &&
+              added.parentElement.isContentEditable
+            ) continue;
+            if (
+              added.nodeType === Node.TEXT_NODE &&
+              added.parentElement &&
+              added.parentElement.isContentEditable
+            ) continue;
+            collectCandidates(added, candidates);
+          }
+        } else if (m.type === "characterData") {
+          const parent = m.target.parentElement;
+          if (!parent) continue;
+          // Skip text churn inside contenteditable — host dir is already set.
+          if (parent.isContentEditable) continue;
+          // In forced modes, if the parent is already correctly tagged and
+          // we aren't transforming text, re-queuing it is pure overhead.
+          if (
+            forced &&
+            noTransforms &&
+            parent.getAttribute(MARK_ATTR) === state.mode &&
+            parent.getAttribute("dir") === state.mode
+          ) continue;
+          candidates.add(parent);
         }
       }
       if (candidates.size) schedule(candidates);
