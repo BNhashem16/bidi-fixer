@@ -71,6 +71,13 @@
   "popup_toggle_title": { "message": "Toggle Bidi Fixer (Alt+Shift+B)" },
   "popup_site_mode_none": { "message": "No override" },
 
+  "options_donate": { "message": "Support the developer" },
+  "options_donate_desc": { "message": "Bidi Fixer is free and open-source. If it helps you, consider sending a small donation." },
+  "options_donate_instapay": { "message": "InstaPay" },
+  "options_donate_vodafone": { "message": "Vodafone Cash" },
+  "options_donate_copy": { "message": "Copy" },
+  "options_donate_copied": { "message": "Copied" },
+
   "ctx_fix_selection": { "message": "Bidi Fixer: fix this element" },
   "ctx_ignore_selection": { "message": "Bidi Fixer: ignore this element" },
   "ctx_toggle_site": { "message": "Bidi Fixer: toggle on this site" }

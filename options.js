@@ -224,4 +224,32 @@ controls.reset.addEventListener("click", () => {
   });
 });
 
+// ---------- Donation copy-to-clipboard ----------
+for (const btn of document.querySelectorAll(".op-donate-copy")) {
+  const originalLabel = btn.textContent;
+  btn.addEventListener("click", async () => {
+    const value = btn.dataset.copy || "";
+    if (!value) return;
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = value;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch {}
+      ta.remove();
+    }
+    btn.classList.add("is-copied");
+    btn.textContent = chrome.i18n.getMessage("options_donate_copied") || "Copied";
+    setTimeout(() => {
+      btn.classList.remove("is-copied");
+      btn.textContent = chrome.i18n.getMessage("options_donate_copy") || originalLabel;
+    }, 1400);
+  });
+}
+
 render();
