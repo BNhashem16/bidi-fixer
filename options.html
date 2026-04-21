@@ -9,9 +9,13 @@
     <main class="op-shell">
       <header class="op-header">
         <span class="op-logo" aria-hidden="true">ب·B</span>
-        <div>
+        <div class="op-header-text">
           <h1 data-i18n="options_title">Bidi Fixer — Options</h1>
-          <p class="op-sub" id="op-version">—</p>
+          <div class="op-header-meta">
+            <span class="op-sub" id="op-version">—</span>
+            <span class="op-dot" aria-hidden="true"></span>
+            <span class="op-kicker" data-i18n="options_footer_license">MIT License</span>
+          </div>
         </div>
       </header>
 
@@ -93,26 +97,45 @@
       </section>
 
       <section class="op-card op-donate">
-        <h2 data-i18n="options_donate">Support the developer</h2>
-        <p class="op-donate-lead" data-i18n="options_donate_desc">Bidi Fixer is free and open-source. If it helps you, consider sending a small donation.</p>
-        <ul class="op-donate-list">
-          <li class="op-donate-row">
-            <span class="op-donate-icon" aria-hidden="true">IP</span>
-            <div class="op-donate-info">
-              <strong data-i18n="options_donate_instapay">InstaPay</strong>
-              <code class="op-donate-num" dir="ltr">+20 115 756 9289</code>
-            </div>
-            <button type="button" class="op-btn op-btn-ghost op-donate-copy" data-copy="+201157569289" data-i18n="options_donate_copy">Copy</button>
-          </li>
-          <li class="op-donate-row">
-            <span class="op-donate-icon op-donate-icon-vf" aria-hidden="true">VF</span>
-            <div class="op-donate-info">
-              <strong data-i18n="options_donate_vodafone">Vodafone Cash</strong>
-              <code class="op-donate-num" dir="ltr">+20 109 468 9235</code>
-            </div>
-            <button type="button" class="op-btn op-btn-ghost op-donate-copy" data-copy="+201094689235" data-i18n="options_donate_copy">Copy</button>
-          </li>
-        </ul>
+        <div class="op-donate-head">
+          <span class="op-donate-kicker">شكراً · Thank you</span>
+          <h2 data-i18n="options_donate">Support the developer</h2>
+          <p class="op-donate-lead" data-i18n="options_donate_desc">Bidi Fixer is free and open-source. If it helps you, consider sending a small donation.</p>
+        </div>
+
+        <div class="op-pay-grid">
+          <article class="op-pay op-pay-instapay">
+            <span class="op-pay-glow" aria-hidden="true"></span>
+            <header class="op-pay-top">
+              <span class="op-pay-mark" aria-hidden="true">IP</span>
+              <span class="op-pay-label" data-i18n="options_donate_instapay">InstaPay</span>
+            </header>
+            <code class="op-pay-num" dir="ltr">+20 115 756 9289</code>
+            <button type="button" class="op-pay-copy op-donate-copy" data-copy="+201157569289">
+              <svg class="op-pay-copy-icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span data-i18n="options_donate_copy">Copy</span>
+            </button>
+          </article>
+
+          <article class="op-pay op-pay-vodafone">
+            <span class="op-pay-glow" aria-hidden="true"></span>
+            <header class="op-pay-top">
+              <span class="op-pay-mark" aria-hidden="true">VF</span>
+              <span class="op-pay-label" data-i18n="options_donate_vodafone">Vodafone Cash</span>
+            </header>
+            <code class="op-pay-num" dir="ltr">+20 109 468 9235</code>
+            <button type="button" class="op-pay-copy op-donate-copy" data-copy="+201094689235">
+              <svg class="op-pay-copy-icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span data-i18n="options_donate_copy">Copy</span>
+            </button>
+          </article>
+        </div>
       </section>
 
       <section class="op-card">
