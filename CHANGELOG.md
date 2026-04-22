@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here. This project follows [Semantic Versioning](https://semver.org/).
 
+## [1.3.2] - 2026-04-22
+
+### Changed
+- Dropped the unused `scripting` permission. The content script is declared statically in the manifest, so `chrome.scripting` was never called. Removing it eliminates one permission warning at install time and improves Enhanced Safe Browsing trust.
+- Removed the redundant `web_accessible_resources` entry for `styles.css`. The stylesheet is already injected via `content_scripts.css`; exposing it to page contexts was unnecessary.
+- `PRIVACY.md` and `docs/STORE_LISTING.md` updated to match the new permission set.
+
 ## [1.3.0] - 2026-04-20
 
 ### Added
