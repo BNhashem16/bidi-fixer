@@ -149,15 +149,23 @@
     const mode = state.mode;
     if (mode !== "rtl" && mode !== "ltr") return;
 
+    // For editable surfaces we use `dir="auto"` instead of a forced direction.
+    // Hard-forcing dir on an input mangles neutrals (punctuation, symbols)
+    // in mixed Arabic + English text. `dir="auto"` lets the browser pick the
+    // paragraph direction from the first strong character the user types,
+    // so Arabic flows RTL, English flows LTR, and dots/parens/symbols land
+    // on the correct side automatically.
+    const desiredDir = "auto";
+
     // Already fixed for current mode — skip to keep streaming/typing fast.
-    if (el.getAttribute(MARK_ATTR) === mode && el.getAttribute("dir") === mode) return;
+    if (el.getAttribute(MARK_ATTR) === mode && el.getAttribute("dir") === desiredDir) return;
 
     if (!el.hasAttribute(MARK_ATTR)) {
       const existing = el.getAttribute("dir");
       if (existing !== null) el.setAttribute(ORIG_DIR_ATTR, existing);
     }
 
-    if (el.getAttribute("dir") !== mode) el.setAttribute("dir", mode);
+    if (el.getAttribute("dir") !== desiredDir) el.setAttribute("dir", desiredDir);
     if (el.getAttribute(MARK_ATTR) !== mode) el.setAttribute(MARK_ATTR, mode);
 
     state.fixedCount++;
