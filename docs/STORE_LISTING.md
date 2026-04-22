@@ -62,7 +62,6 @@ Built on a single MutationObserver batched through `requestIdleCallback`. Typica
 
 • **storage** — Save your direction preferences and per-site overrides locally.
 • **activeTab** — Allow the popup "Rescan" button to re-apply fixes on the current tab.
-• **scripting** — Required by MV3 for content scripts.
 • **tabs** — When you change settings, push the change to every open tab so the fix updates live without a reload.
 • **contextMenus** — Show "Fix this element / Ignore / Toggle on this site" on right-click.
 • **host_permissions `<all_urls>`** — Mixed-direction text appears on every kind of site (news, social, shopping, docs). The extension only reads text content to detect Arabic/Hebrew/Persian characters and does not send any of it anywhere.

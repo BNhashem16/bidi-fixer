@@ -33,7 +33,6 @@ You can export or wipe all settings at any time from the Options page.
 |------------|-----|
 | `storage` | Save your preferences. |
 | `activeTab` | Let the popup rescan the current tab on demand. |
-| `scripting` | Required by Manifest V3 to inject the content script. |
 | `tabs` | Broadcast setting changes to all open tabs so they take effect live. |
 | `contextMenus` | Show the right-click "Fix / Ignore / Toggle" options. |
 | `host_permissions: <all_urls>` | The extension works on every site, because mixed-direction text shows up everywhere. It does **not** read page content beyond what is strictly needed to detect RTL characters, and it does not send that content anywhere. |
