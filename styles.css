@@ -16,6 +16,17 @@
   unicode-bidi: isolate;
 }
 
+/* Editable surfaces marked by Bidi Fixer use dir="auto" so each paragraph
+   picks its own direction from the first strong character. Reinforce that
+   with `unicode-bidi: plaintext` so neutrals (., ?, !, /, @, -, parens)
+   inside typed text take direction from the surrounding LTR/RTL run they
+   belong to, instead of being pushed to a paragraph edge by a forced dir. */
+input[data-bidi-fixer][dir="auto"],
+textarea[data-bidi-fixer][dir="auto"],
+[contenteditable][data-bidi-fixer][dir="auto"] {
+  unicode-bidi: plaintext;
+}
+
 /* Debug mode — outlines every fixed element. Toggled by the content script
    adding the `bidi-fixer-debug` class on <html>. */
 html.bidi-fixer-debug [data-bidi-fixer] {
